@@ -6,6 +6,7 @@ import "strings"
 import "go/parser"
 import "go/token"
 import "go/ast"
+import "visitor"
 // import "tree"
 // import "reflect"
 
@@ -52,11 +53,13 @@ func main() {
     } else {
         for name, node := range pkg {
             fmt.Println(name)
+            visitor := visitor.New()
             ast.Walk(
-                nil,
+                visitor,
                 node,
             )
-            fmt.Println()
+            AST := visitor.AST()
+            fmt.Println(AST)
         }
     }
 }
