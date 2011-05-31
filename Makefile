@@ -1,7 +1,14 @@
-include $(GOROOT)/src/Make.inc
+build: clean
+	gobuild -a
 
-TARG=goast
-GOFILES=\
-	main.go\
+test: build
+	-gobuild -t -run
+	rm _testmain _testmain.6 _testmain.go
 
-include $(GOROOT)/src/Make.cmd
+.PHONY : clean
+clean :
+	-rm -r main
+	-rm _testmain _testmain.6 _testmain.go
+	-find . -name "*.6" | xargs -I"%s" rm %s
+	-find . -name "*.a" | xargs -I"%s" rm %s
+

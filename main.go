@@ -6,17 +6,17 @@ import "strings"
 import "go/parser"
 import "go/token"
 import "go/ast"
-import "reflect"
+// import "tree"
+// import "reflect"
 
-const usage_msg =
-`goast gofile.go
+const usage_msg = `goast gofile.go
 
 GoAST produces an AST for the given go file.
 `
 
-var exitcodes = map[string]int {
-    "ok" : 0,
-    "usage" : 1,
+var exitcodes = map[string]int{
+    "ok":      0,
+    "usage":   1,
     "badpath": 2,
 }
 
@@ -41,23 +41,20 @@ func main() {
     path := os.Args[1]
     fmt.Println("path = ", path)
     if pkg, err := parser.ParseDir(token.NewFileSet(), path,
-        func (finfo *os.FileInfo) bool {
+        func(finfo *os.FileInfo) bool {
             fmt.Println(finfo.Name, strings.HasSuffix(finfo.Name, ".go"))
             return strings.HasSuffix(finfo.Name, ".go")
         },
         0); err != nil {
-            error("could not read path")
-            error(err.String())
-            usage(exitcodes["badpath"])
+        error("could not read path")
+        error(err.String())
+        usage(exitcodes["badpath"])
     } else {
         for name, node := range pkg {
             fmt.Println(name)
-            ast.Inspect(node,
-                func(n ast.Node) bool {
-                    if n == nil { return false }
-                    fmt.Println(reflect.Typeof(n), n.Pos(), n.End())
-                    return true
-                },
+            ast.Walk(
+                nil,
+                node,
             )
             fmt.Println()
         }
