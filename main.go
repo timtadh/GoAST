@@ -19,6 +19,7 @@ var exitcodes = map[string]int{
     "ok":      0,
     "usage":   1,
     "badpath": 2,
+    "barf":    3,
 }
 
 func usage(status int) {
@@ -51,6 +52,10 @@ func main() {
         error(err.String())
         usage(exitcodes["badpath"])
     } else {
+        if len(pkg) != 1 {
+            error("the directory contained more than one package, I will barf.")
+            os.Exit(exitcodes["barf"])
+        }
         for name, node := range pkg {
             fmt.Println(name)
             visitor := visitor.New()

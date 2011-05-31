@@ -1,6 +1,6 @@
 package visitor
 
-import "fmt"
+// import "fmt"
 import "tree"
 import "go/ast"
 import "reflect"
@@ -19,8 +19,7 @@ func (self *AST_Visitor) AST() *tree.Node {
     return self.parent.Children[0]
 }
 
-func (self *AST_Visitor) addKid(name string) *tree.Node {
-    node := tree.NewNode(name)
+func (self *AST_Visitor) addKid(node *tree.Node) *tree.Node {
     if self.parent != nil {
         self.parent.AddKid(node)
     }
@@ -28,9 +27,33 @@ func (self *AST_Visitor) addKid(name string) *tree.Node {
 }
 
 func (self *AST_Visitor) Visit(n ast.Node) ast.Visitor {
-    fmt.Println(n)
     if n == nil { return nil }
     w := new(AST_Visitor)
-    w.parent = self.addKid(reflect.TypeOf(n).String()[5:])
+    w.parent = self.addKid(getlabel(n))
     return w
 }
+
+func getlabel(n ast.Node) *tree.Node {
+    node_type := reflect.TypeOf(n).String()[5:]
+    if f, ok := visitors[node_type]; !ok {
+        return tree.NewNode(node_type)
+    } else {
+        return f(node_type, n)
+    }
+    panic("unreachable")
+}
+
+var visitors = map[string]func(string, ast.Node)*tree.Node {
+    "Ident" : func (node_type string, n ast.Node) *tree.Node  {
+        m := n.(*ast.Ident)
+        parent := tree.NewNode(node_type)
+        parent.
+            AddKid(tree.NewNode(m.Name))
+        if m.Obj != nil {
+            parent.
+                AddKid(tree.NewNode(m.Obj.Kind.String()))
+        }
+        return parent
+    },
+}
+
