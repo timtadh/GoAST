@@ -1,6 +1,6 @@
 package visitor
 
-// import "fmt"
+import "fmt"
 import "tree"
 import "go/ast"
 import "reflect"
@@ -53,6 +53,16 @@ var visitors = map[string]func(string, ast.Node)*tree.Node {
             parent.
                 AddKid(tree.NewNode(m.Obj.Kind.String()))
         }
+        return parent
+    },
+
+
+    "BasicLit" : func (node_type string, n ast.Node) *tree.Node  {
+        m := n.(*ast.BasicLit)
+        parent := tree.NewNode(node_type)
+        parent.
+            AddKid(tree.NewNode(fmt.Sprint(m.Kind))).
+            AddKid(tree.NewNode(m.Value))
         return parent
     },
 }
