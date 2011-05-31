@@ -41,10 +41,8 @@ func main() {
     }
 
     path := os.Args[1]
-    fmt.Println("path = ", path)
     if pkg, err := parser.ParseDir(token.NewFileSet(), path,
         func(finfo *os.FileInfo) bool {
-            fmt.Println(finfo.Name, strings.HasSuffix(finfo.Name, ".go"))
             return strings.HasSuffix(finfo.Name, ".go")
         },
         0); err != nil {
@@ -52,19 +50,19 @@ func main() {
         error(err.String())
         usage(exitcodes["badpath"])
     } else {
-        if len(pkg) != 1 {
-            error("the directory contained more than one package, I will barf.")
-            os.Exit(exitcodes["barf"])
-        }
-        for name, node := range pkg {
-            fmt.Println(name)
+//         if len(pkg) != 1 {
+//             error("the directory contained more than one package, I will barf.")
+//             os.Exit(exitcodes["barf"])
+//         }
+        for _, node := range pkg {
             visitor := visitor.New()
             ast.Walk(
                 visitor,
                 node,
             )
             AST := visitor.AST()
-            fmt.Println(AST)
+            fmt.Println(AST.Dotty())
+            break;
         }
     }
 }
