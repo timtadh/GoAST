@@ -128,19 +128,19 @@ func GoAST_Walk(v Visitor, node Node) {
         }
         walkIdentList(v, n.Names)
         GoAST_Walk(v, NewDummyNode(
-                "Type",
-                n.Type.Pos(),
-                n.Type.End(),
-                []Node{n.Type},
-            ),
+            "Type",
+            n.Type.Pos(),
+            n.Type.End(),
+            []Node{n.Type},
+        ),
         )
         if n.Tag != nil {
             GoAST_Walk(v, NewDummyNode(
-                    "Tag",
-                    n.Tag.Pos(),
-                    n.Tag.End(),
-                    []Node{n.Tag},
-                ),
+                "Tag",
+                n.Tag.Pos(),
+                n.Tag.End(),
+                []Node{n.Tag},
+            ),
             )
         }
         if n.Comment != nil {
@@ -186,20 +186,20 @@ func GoAST_Walk(v Visitor, node Node) {
         GoAST_Walk(v, n.X)
         if n.Low != nil {
             GoAST_Walk(v, NewDummyNode(
-                    "Low",
-                    n.Low.Pos(),
-                    n.Low.End(),
-                    []Node{n.Low},
-                ),
+                "Low",
+                n.Low.Pos(),
+                n.Low.End(),
+                []Node{n.Low},
+            ),
             )
         }
         if n.High != nil {
             GoAST_Walk(v, NewDummyNode(
-                    "High",
-                    n.High.Pos(),
-                    n.High.End(),
-                    []Node{n.High},
-                ),
+                "High",
+                n.High.Pos(),
+                n.High.End(),
+                []Node{n.High},
+            ),
             )
         }
 
@@ -233,11 +233,11 @@ func GoAST_Walk(v Visitor, node Node) {
             GoAST_Walk(v, n.Len)
         }
         GoAST_Walk(v, NewDummyNode(
-                "ElemType",
-                n.Elt.Pos(),
-                n.Elt.End(),
-                []Node{n.Elt},
-            ),
+            "ElemType",
+            n.Elt.Pos(),
+            n.Elt.End(),
+            []Node{n.Elt},
+        ),
         )
 
     case *StructType:
@@ -282,18 +282,18 @@ func GoAST_Walk(v Visitor, node Node) {
 
     case *ChanType:
         GoAST_Walk(v, NewDummyNode(
-                "Direction",
-                n.Pos(),
-                n.End(),
-                []Node{NewDummyNode(fmt.Sprint(n.Dir), n.Pos(), n.End(), nil)},
-            ),
+            "Direction",
+            n.Pos(),
+            n.End(),
+            []Node{NewDummyNode(fmt.Sprint(n.Dir), n.Pos(), n.End(), nil)},
+        ),
         )
         GoAST_Walk(v, NewDummyNode(
-                "ElemType",
-                n.Value.Pos(),
-                n.Value.End(),
-                []Node{n.Value},
-            ),
+            "ElemType",
+            n.Value.Pos(),
+            n.Value.End(),
+            []Node{n.Value},
+        ),
         )
 
     // Statements
@@ -384,11 +384,11 @@ func GoAST_Walk(v Visitor, node Node) {
     case *CaseClause:
         if n.List == nil {
             GoAST_Walk(v, NewDummyNode(
-                    "default",
-                    n.Case,
-                    n.Colon,
-                    nil,
-                ),
+                "default",
+                n.Case,
+                n.Colon,
+                nil,
+            ),
             )
         }
         walkExprList(v, n.List)
@@ -415,11 +415,11 @@ func GoAST_Walk(v Visitor, node Node) {
             GoAST_Walk(v, n.Comm)
         } else {
             GoAST_Walk(v, NewDummyNode(
-                    "default",
-                    n.Case,
-                    n.Colon,
-                    nil,
-                ),
+                "default",
+                n.Case,
+                n.Colon,
+                nil,
+            ),
             )
         }
         walkStmtList(v, n.Body)
@@ -430,76 +430,76 @@ func GoAST_Walk(v Visitor, node Node) {
     case *ForStmt:
         if n.Init != nil {
             GoAST_Walk(v, NewDummyNode(
-                    "Init",
-                    n.Init.Pos(),
-                    n.Init.End(),
-                    []Node{n.Init},
-                ),
+                "Init",
+                n.Init.Pos(),
+                n.Init.End(),
+                []Node{n.Init},
+            ),
             )
         }
         if n.Cond != nil {
             GoAST_Walk(v, NewDummyNode(
-                    "Cond",
-                    n.Cond.Pos(),
-                    n.Cond.End(),
-                    []Node{n.Cond},
-                ),
+                "Cond",
+                n.Cond.Pos(),
+                n.Cond.End(),
+                []Node{n.Cond},
+            ),
             )
         }
         if n.Post != nil {
             GoAST_Walk(v, NewDummyNode(
-                    "Post",
-                    n.Post.Pos(),
-                    n.Post.End(),
-                    []Node{n.Post},
-                ),
+                "Post",
+                n.Post.Pos(),
+                n.Post.End(),
+                []Node{n.Post},
+            ),
             )
         }
         GoAST_Walk(v, NewDummyNode(
-                "Body",
-                n.Body.Pos(),
-                n.Body.End(),
-                []Node{n.Body},
-            ),
+            "Body",
+            n.Body.Pos(),
+            n.Body.End(),
+            []Node{n.Body},
+        ),
         )
 
     case *RangeStmt:
         GoAST_Walk(v, NewDummyNode(
-                "Key",
-                n.Key.Pos(),
-                n.Key.End(),
-                []Node{n.Key},
-            ),
+            "Key",
+            n.Key.Pos(),
+            n.Key.End(),
+            []Node{n.Key},
+        ),
         )
         if n.Value != nil {
             GoAST_Walk(v, NewDummyNode(
-                    "Value",
-                    n.Value.Pos(),
-                    n.Value.End(),
-                    []Node{n.Value},
-                ),
+                "Value",
+                n.Value.Pos(),
+                n.Value.End(),
+                []Node{n.Value},
+            ),
             )
         }
         GoAST_Walk(v, NewDummyNode(
-                fmt.Sprint(n.Tok),
-                n.TokPos,
-                n.TokPos,
-                nil,
-            ),
+            fmt.Sprint(n.Tok),
+            n.TokPos,
+            n.TokPos,
+            nil,
+        ),
         )
         GoAST_Walk(v, NewDummyNode(
-                "Rangeable",
-                n.X.Pos(),
-                n.X.End(),
-                []Node{n.X},
-            ),
+            "Rangeable",
+            n.X.Pos(),
+            n.X.End(),
+            []Node{n.X},
+        ),
         )
         GoAST_Walk(v, NewDummyNode(
-                "Body",
-                n.Body.Pos(),
-                n.Body.End(),
-                []Node{n.Body},
-            ),
+            "Body",
+            n.Body.Pos(),
+            n.Body.End(),
+            []Node{n.Body},
+        ),
         )
 
     // Declarations
@@ -555,34 +555,34 @@ func GoAST_Walk(v Visitor, node Node) {
         }
         if n.Recv != nil {
             GoAST_Walk(v, NewDummyNode(
-                    "Recv",
-                    n.Recv.Pos(),
-                    n.Recv.End(),
-                    []Node{n.Recv},
-                ),
+                "Recv",
+                n.Recv.Pos(),
+                n.Recv.End(),
+                []Node{n.Recv},
+            ),
             )
         }
         GoAST_Walk(v, NewDummyNode(
-                "Name",
-                n.Name.Pos(),
-                n.Name.End(),
-                []Node{n.Name},
-            ),
+            "Name",
+            n.Name.Pos(),
+            n.Name.End(),
+            []Node{n.Name},
+        ),
         )
         GoAST_Walk(v, NewDummyNode(
-                "Type",
-                n.Type.Pos(),
-                n.Type.End(),
-                []Node{n.Type},
-            ),
+            "Type",
+            n.Type.Pos(),
+            n.Type.End(),
+            []Node{n.Type},
+        ),
         )
         if n.Body != nil {
             GoAST_Walk(v, NewDummyNode(
-                    "Body",
-                    n.Body.Pos(),
-                    n.Body.End(),
-                    []Node{n.Body},
-                ),
+                "Body",
+                n.Body.Pos(),
+                n.Body.End(),
+                []Node{n.Body},
+            ),
             )
         }
 

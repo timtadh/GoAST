@@ -9,7 +9,7 @@ import "walk"
 
 type AST_Visitor struct {
     parent *tree.Node
-    node ast.Node
+    node   ast.Node
 }
 
 func New() *AST_Visitor {
@@ -56,7 +56,7 @@ func (self *AST_Visitor) getlabel(n ast.Node) *tree.Node {
     panic("unreachable")
 }
 
-var visitors = map[string]func(string, ast.Node) *tree.Node {
+var visitors = map[string]func(string, ast.Node) *tree.Node{
     "Ident": func(name string, n ast.Node) *tree.Node {
         m := n.(*ast.Ident)
         p := tree.NewNode(name).AddKid(tree.NewNode(m.Name))
@@ -115,7 +115,7 @@ var visitors = map[string]func(string, ast.Node) *tree.Node {
 These functions rewrite the tree after construction. I try to keep these to a minimum. But
 sometimes they are necessary for a cleaner tree.
 */
-var finalizers = map[string]func(ast.Node, *tree.Node) {
+var finalizers = map[string]func(ast.Node, *tree.Node){
     "Idents": func(n ast.Node, root *tree.Node) {
         root.Children = func() []*tree.Node {
             children := make([]*tree.Node, 0, len(root.Children))
