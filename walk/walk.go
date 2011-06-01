@@ -233,10 +233,32 @@ func GoAST_Walk(v Visitor, node Node) {
 
     case *FuncType:
         if n.Params.NumFields() > 0 {
-            GoAST_Walk(v, n.Params)
+            list := n.Params.List
+            GoAST_Walk(v,
+                NewDummyNode("Params",
+                    list[0].Pos(),
+                    list[len(list)-1].End(),
+                    func() []Node {
+                        nodes := make([]Node, 0, len(list))
+                        for _, c := range list {
+                            nodes = append(nodes, Node(c))
+                        }
+                        return nodes
+                    }()))
         }
-        if n.Results != nil {
-            GoAST_Walk(v, n.Results)
+        if n.Results != nil && n.Results.NumFields() > 0 {
+            list := n.Results.List
+            GoAST_Walk(v,
+                NewDummyNode("Results",
+                    list[0].Pos(),
+                    list[len(list)-1].End(),
+                    func() []Node {
+                        nodes := make([]Node, 0, len(list))
+                        for _, c := range list {
+                            nodes = append(nodes, Node(c))
+                        }
+                        return nodes
+                    }()))
         }
 
     case *InterfaceType:
