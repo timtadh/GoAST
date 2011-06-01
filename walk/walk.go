@@ -547,7 +547,14 @@ func GoAST_Walk(v Visitor, node Node) {
             GoAST_Walk(v, n.Doc)
         }
         if n.Type != nil {
-            GoAST_Walk(v, n.Type)
+            GoAST_Walk(v,
+                NewDummyNode(
+                    "Type",
+                    n.Type.Pos(),
+                    n.Type.End(),
+                    []Node{n.Type},
+                ),
+            )
         }
         if n.Comment != nil {
             GoAST_Walk(v, n.Comment)
@@ -579,35 +586,39 @@ func GoAST_Walk(v Visitor, node Node) {
             GoAST_Walk(v, n.Doc)
         }
         if n.Recv != nil {
-            GoAST_Walk(v, NewDummyNode(
-                "Recv",
-                n.Recv.Pos(),
-                n.Recv.End(),
-                []Node{n.Recv},
-            ),
+            GoAST_Walk(v,
+                NewDummyNode(
+                    "Recv",
+                    n.Recv.Pos(),
+                    n.Recv.End(),
+                    []Node{n.Recv},
+                ),
             )
         }
-        GoAST_Walk(v, NewDummyNode(
-            "Name",
-            n.Name.Pos(),
-            n.Name.End(),
-            []Node{n.Name},
-        ),
+        GoAST_Walk(v,
+            NewDummyNode(
+                "Name",
+                n.Name.Pos(),
+                n.Name.End(),
+                []Node{n.Name},
+            ),
         )
-        GoAST_Walk(v, NewDummyNode(
-            "Type",
-            n.Type.Pos(),
-            n.Type.End(),
-            []Node{n.Type},
-        ),
+        GoAST_Walk(v,
+            NewDummyNode(
+                "Type",
+                n.Type.Pos(),
+                n.Type.End(),
+                []Node{n.Type},
+            ),
         )
         if n.Body != nil {
-            GoAST_Walk(v, NewDummyNode(
-                "Body",
-                n.Body.Pos(),
-                n.Body.End(),
-                []Node{n.Body},
-            ),
+            GoAST_Walk(v,
+                NewDummyNode(
+                    "Body",
+                    n.Body.Pos(),
+                    n.Body.End(),
+                    []Node{n.Body},
+                ),
             )
         }
 
