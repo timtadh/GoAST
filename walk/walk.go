@@ -333,12 +333,40 @@ func GoAST_Walk(v Visitor, node Node) {
 
     case *IfStmt:
         if n.Init != nil {
-            GoAST_Walk(v, n.Init)
+            GoAST_Walk(v,
+                NewDummyNode(
+                    "Init",
+                    n.Init.Pos(),
+                    n.Init.End(),
+                    []Node{n.Init},
+                ),
+            )
         }
-        GoAST_Walk(v, n.Cond)
-        GoAST_Walk(v, n.Body)
+        GoAST_Walk(v,
+            NewDummyNode(
+                "Cond",
+                n.Cond.Pos(),
+                n.Cond.End(),
+                []Node{n.Cond},
+            ),
+        )
+        GoAST_Walk(v,
+            NewDummyNode(
+                "Body",
+                n.Body.Pos(),
+                n.Body.End(),
+                []Node{n.Body},
+            ),
+        )
         if n.Else != nil {
-            GoAST_Walk(v, n.Else)
+            GoAST_Walk(v,
+                NewDummyNode(
+                    "Else",
+                    n.Else.Pos(),
+                    n.Else.End(),
+                    []Node{n.Else},
+                ),
+            )
         }
 
     case *CaseClause:

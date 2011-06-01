@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func fib(i int) (r int) {
-    if (i == 0) {
+    if j := i; j == 0 {
         r = 0;
     } else if (i == 1) {
         r = 1;
