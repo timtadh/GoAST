@@ -247,7 +247,20 @@ func GoAST_Walk(v Visitor, node Node) {
         GoAST_Walk(v, n.Value)
 
     case *ChanType:
-        GoAST_Walk(v, n.Value)
+        GoAST_Walk(v, NewDummyNode(
+                "Direction",
+                n.Pos(),
+                n.End(),
+                []Node{NewDummyNode(fmt.Sprint(n.Dir), n.Pos(), n.End(), nil)},
+            ),
+        )
+        GoAST_Walk(v, NewDummyNode(
+                "ElemType",
+                n.Value.Pos(),
+                n.Value.End(),
+                []Node{n.Value},
+            ),
+        )
 
     // Statements
     case *BadStmt:
