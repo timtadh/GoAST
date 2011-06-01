@@ -47,15 +47,38 @@ var visitors = map[string]func(string, ast.Node)*tree.Node {
     "Ident" : func (node_type string, n ast.Node) *tree.Node  {
         m := n.(*ast.Ident)
         parent := tree.NewNode(node_type)
-        parent.
-            AddKid(tree.NewNode(m.Name))
+        parent.AddKid(tree.NewNode(m.Name))
         if m.Obj != nil {
-            parent.
-                AddKid(tree.NewNode(m.Obj.Kind.String()))
+            parent.AddKid(
+                func(obj *ast.Object) *tree.Node {
+                    parent := tree.NewNode("Object").
+                        AddKid(tree.NewNode(obj.Kind.String()))
+                    if obj.Decl != nil {
+                        parent.AddKid(
+                            func(d interface{}) *tree.Node {
+                                parent := tree.NewNode("Decl")
+                                switch decl := d.(type) {
+                                case *ast.Field:
+                                case *ast.FuncDecl:
+                                    parent.
+                                        AddKid(getlabel(decl).
+                                            AddKid(getlabel(decl.Name)),
+                                        )
+                                case *ast.LabeledStmt:
+                                case *ast.ImportSpec:
+                                case *ast.ValueSpec:
+                                case *ast.TypeSpec:
+                                }
+                                return parent
+                            }(obj.Decl),
+                        )
+                    }
+                    return parent
+                }(m.Obj),
+            )
         }
         return parent
     },
-
 
     "BasicLit" : func (node_type string, n ast.Node) *tree.Node  {
         m := n.(*ast.BasicLit)
