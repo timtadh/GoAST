@@ -56,10 +56,14 @@ func (self *AST_Visitor) getlabel(n ast.Node) *tree.Node {
     panic("unreachable")
 }
 
-var visitors = map[string]func(string, ast.Node) *tree.Node{
+var visitors = map[string]func(string, ast.Node) *tree.Node {
     "Ident": func(name string, n ast.Node) *tree.Node {
         m := n.(*ast.Ident)
-        return tree.NewNode(name).AddKid(tree.NewNode(m.Name))
+        p := tree.NewNode(name).AddKid(tree.NewNode(m.Name))
+        if m.IsExported() {
+            p.AddKid(tree.NewNode("Exported"))
+        }
+        return p
     },
 
     "BasicLit": func(name string, n ast.Node) *tree.Node {
