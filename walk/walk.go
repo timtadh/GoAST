@@ -474,6 +474,34 @@ func GoAST_Walk(v Visitor, node Node) {
         }
         GoAST_Walk(v, n.Name)
         walkDeclList(v, n.Decls)
+        if len(n.Imports) > 0 {
+            list := n.Imports
+            GoAST_Walk(v,
+                NewDummyNode("Imports",
+                    list[0].Pos(),
+                    list[len(list)-1].End(),
+                    func() []Node {
+                        nodes := make([]Node, 0, len(list))
+                        for _, c := range list {
+                            nodes = append(nodes, Node(c))
+                        }
+                        return nodes
+                    }()))
+        }
+        if len(n.Unresolved) > 0 {
+            list := n.Unresolved
+            GoAST_Walk(v,
+                NewDummyNode("Unresolved",
+                    list[0].Pos(),
+                    list[len(list)-1].End(),
+                    func() []Node {
+                        nodes := make([]Node, 0, len(list))
+                        for _, c := range list {
+                            nodes = append(nodes, Node(c))
+                        }
+                        return nodes
+                    }()))
+        }
         for _, g := range n.Comments {
             GoAST_Walk(v, g)
         }

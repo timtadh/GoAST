@@ -135,4 +135,17 @@ var finalizers = map[string]func(ast.Node, *tree.Node) {
             root.AddKid(tree.NewNode("HasEllipsis"))
         }
     },
+
+    "Unresolved": func(n ast.Node, root *tree.Node) {
+        newkids := make([]*tree.Node, 0, len(root.Children))
+        set := make(map[string]bool)
+        for _, ident := range root.Children {
+            name := ident.Children[0].Label
+            if _, has := set[name]; !has {
+                set[name] = true
+                newkids = append(newkids, tree.NewNode(name))
+            }
+        }
+        root.Children = newkids
+    },
 }

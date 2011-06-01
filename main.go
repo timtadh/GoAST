@@ -77,4 +77,5 @@ func main() {
             break
         }
     }
+    error("GoAST complete")
 }
