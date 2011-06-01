@@ -20,40 +20,74 @@ func (self *DummyNode) End() token.Pos { return self.end }
 
 // Helper functions.
 func walkIdentList(v Visitor, list []*Ident) {
-    for _, x := range list {
-        GoAST_Walk(v, x)
+    if len(list) == 0 {
+        return
     }
+    GoAST_Walk(v,
+        NewDummyNode("Idents",
+            list[0].Pos(),
+            list[len(list)-1].End(),
+            func() []Node {
+                nodes := make([]Node, 0, len(list))
+                for _, c := range list {
+                    nodes = append(nodes, Node(c))
+                }
+                return nodes
+            }()))
 }
 
 
 func walkExprList(v Visitor, list []Expr) {
-    if len(list) > 0 {
-        GoAST_Walk(v,
-            NewDummyNode("ExprList",
-                list[0].Pos(),
-                list[len(list)-1].End(),
-                func() []Node {
-                    nodes := make([]Node, 0, len(list))
-                    for _, c := range list {
-                        nodes = append(nodes, Node(c))
-                    }
-                    return nodes
-                }()))
+    if len(list) == 0 {
+        return
     }
+    GoAST_Walk(v,
+        NewDummyNode("Exprs",
+            list[0].Pos(),
+            list[len(list)-1].End(),
+            func() []Node {
+                nodes := make([]Node, 0, len(list))
+                for _, c := range list {
+                    nodes = append(nodes, Node(c))
+                }
+                return nodes
+            }()))
 }
 
 
 func walkStmtList(v Visitor, list []Stmt) {
-    for _, x := range list {
-        GoAST_Walk(v, x)
+    if len(list) == 0 {
+        return
     }
+    GoAST_Walk(v,
+        NewDummyNode("Stmts",
+            list[0].Pos(),
+            list[len(list)-1].End(),
+            func() []Node {
+                nodes := make([]Node, 0, len(list))
+                for _, c := range list {
+                    nodes = append(nodes, Node(c))
+                }
+                return nodes
+            }()))
 }
 
 
 func walkDeclList(v Visitor, list []Decl) {
-    for _, x := range list {
-        GoAST_Walk(v, x)
+    if len(list) == 0 {
+        return
     }
+    GoAST_Walk(v,
+        NewDummyNode("Decls",
+            list[0].Pos(),
+            list[len(list)-1].End(),
+            func() []Node {
+                nodes := make([]Node, 0, len(list))
+                for _, c := range list {
+                    nodes = append(nodes, Node(c))
+                }
+                return nodes
+            }()))
 }
 
 
@@ -77,7 +111,7 @@ func GoAST_Walk(v Visitor, node Node) {
     switch n := node.(type) {
     // Comments and fields
     case *Comment:
-        // nothing to do
+        // do nothing
     case *DummyNode:
         for _, c := range n.List {
             GoAST_Walk(v, c)
@@ -93,9 +127,21 @@ func GoAST_Walk(v Visitor, node Node) {
             GoAST_Walk(v, n.Doc)
         }
         walkIdentList(v, n.Names)
-        GoAST_Walk(v, n.Type)
+        GoAST_Walk(v, NewDummyNode(
+                "Type",
+                n.Type.Pos(),
+                n.Type.End(),
+                []Node{n.Type},
+            ),
+        )
         if n.Tag != nil {
-            GoAST_Walk(v, n.Tag)
+            GoAST_Walk(v, NewDummyNode(
+                    "Tag",
+                    n.Tag.Pos(),
+                    n.Tag.End(),
+                    []Node{n.Tag},
+                ),
+            )
         }
         if n.Comment != nil {
             GoAST_Walk(v, n.Comment)
@@ -174,13 +220,21 @@ func GoAST_Walk(v Visitor, node Node) {
         if n.Len != nil {
             GoAST_Walk(v, n.Len)
         }
-        GoAST_Walk(v, n.Elt)
+        GoAST_Walk(v, NewDummyNode(
+                "ElemType",
+                n.Elt.Pos(),
+                n.Elt.End(),
+                []Node{n.Elt},
+            ),
+        )
 
     case *StructType:
         GoAST_Walk(v, n.Fields)
 
     case *FuncType:
-        GoAST_Walk(v, n.Params)
+        if n.Params.NumFields() > 0 {
+            GoAST_Walk(v, n.Params)
+        }
         if n.Results != nil {
             GoAST_Walk(v, n.Results)
         }
@@ -238,7 +292,9 @@ func GoAST_Walk(v Visitor, node Node) {
         }
 
     case *BlockStmt:
-        walkStmtList(v, n.List)
+        for _, c := range n.List {
+            GoAST_Walk(v, c)
+        }
 
     case *IfStmt:
         if n.Init != nil {
@@ -313,14 +369,14 @@ func GoAST_Walk(v Visitor, node Node) {
         }
 
     case *ValueSpec:
+        walkIdentList(v, n.Names)
+        walkExprList(v, n.Values)
         if n.Doc != nil {
             GoAST_Walk(v, n.Doc)
         }
-        walkIdentList(v, n.Names)
         if n.Type != nil {
             GoAST_Walk(v, n.Type)
         }
-        walkExprList(v, n.Values)
         if n.Comment != nil {
             GoAST_Walk(v, n.Comment)
         }
