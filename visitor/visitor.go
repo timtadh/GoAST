@@ -89,12 +89,23 @@ var visitors = map[string]func(string, ast.Node) *tree.Node{
             AddKid(tree.NewNode(fmt.Sprint(m.Tok)))
     },
 
+
+    "BranchStmt": func(name string, n ast.Node) *tree.Node {
+        m := n.(*ast.BranchStmt)
+        return tree.NewNode(name).
+            AddKid(tree.NewNode(fmt.Sprint(m.Tok)))
+    },
+
     "*walk.DummyNode": func(name string, n ast.Node) *tree.Node {
         m := n.(*walk.DummyNode)
         return tree.NewNode(m.Name)
     },
 }
 
+/*
+These functions rewrite the tree after construction. I try to keep these to a minimum. But
+sometimes they are necessary for a cleaner tree.
+*/
 var finalizers = map[string]func(*tree.Node) {
     "Idents": func(root *tree.Node) {
         root.Children = func() []*tree.Node {
@@ -110,7 +121,11 @@ var finalizers = map[string]func(*tree.Node) {
         root.Children = root.Children[0].Children
     },
 
-    "ElemType" : func(root *tree.Node) {
+    "ElemType": func(root *tree.Node) {
         root.Children = root.Children[0].Children
+    },
+
+    "LabeledStmt": func(root *tree.Node) {
+        root.Children[0].Label = "Label"
     },
 }
