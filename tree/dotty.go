@@ -20,7 +20,7 @@ func (self *Node) Dotty() string {
         if parent != "" {
             edges = append(edges, fmt.Sprintf(edge, parent, name))
         }
-        for _,child := range n.Children {
+        for _, child := range n.Children {
             dotnode(child, name)
         }
     }

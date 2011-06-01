@@ -24,8 +24,8 @@ func (self *Node) String() string {
     if self == nil {
         return "<Node nil>"
     }
-    var walk func(*Node)[]string
-    walk = func (n *Node) []string {
+    var walk func(*Node) []string
+    walk = func(n *Node) []string {
         l := make([]string, 0, 10)
         s := fmt.Sprintf("%d:%v", len(n.Children), n.Label)
         l = append(l, s)

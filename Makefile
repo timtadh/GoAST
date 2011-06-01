@@ -5,6 +5,9 @@ test: build
 	-gobuild -t -run
 	rm _testmain _testmain.6 _testmain.go
 
+fmt: clean
+	gofmt -spaces=true -tabindent=false -tabwidth=4 -w .
+
 .PHONY : clean
 clean :
 	-rm -r main

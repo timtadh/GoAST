@@ -10,9 +10,8 @@ func TestPrintTree(t *testing.T) {
     t.Log(NewNode("root").
         AddKid(NewNode("Hiya")).
         AddKid(
-            NewNode("yippy").
-            AddKid(NewNode("Level3"),
-            ),
-        ),
+        NewNode("yippy").
+            AddKid(NewNode("Level3")),
+    ),
     )
 }

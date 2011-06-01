@@ -27,7 +27,9 @@ func (self *AST_Visitor) addKid(node *tree.Node) *tree.Node {
 }
 
 func (self *AST_Visitor) Visit(n ast.Node) ast.Visitor {
-    if n == nil { return nil }
+    if n == nil {
+        return nil
+    }
     w := new(AST_Visitor)
     w.parent = self.addKid(getlabel(n))
     return w
@@ -43,13 +45,13 @@ func getlabel(n ast.Node) *tree.Node {
     panic("unreachable")
 }
 
-var visitors = map[string]func(string, ast.Node)*tree.Node {
-    "Ident" : func (node_type string, n ast.Node) *tree.Node  {
+var visitors = map[string]func(string, ast.Node) *tree.Node{
+    "Ident": func(node_type string, n ast.Node) *tree.Node {
         m := n.(*ast.Ident)
         return tree.NewNode(node_type).AddKid(tree.NewNode(m.Name))
     },
 
-    "BasicLit" : func (node_type string, n ast.Node) *tree.Node  {
+    "BasicLit": func(node_type string, n ast.Node) *tree.Node {
         m := n.(*ast.BasicLit)
         parent := tree.NewNode(node_type)
         parent.
@@ -58,9 +60,9 @@ var visitors = map[string]func(string, ast.Node)*tree.Node {
         return parent
     },
 
-    "BinaryExpr" : func (node_type string, n ast.Node) *tree.Node {
-//         m := n.(*ast.BinaryExpr)
-        return tree.NewNode(node_type)
+    "BinaryExpr": func(node_type string, n ast.Node) *tree.Node {
+        m := n.(*ast.BinaryExpr)
+        return tree.NewNode(node_type).
+            AddKid(tree.NewNode(fmt.Sprint(m.Op)))
     },
 }
-
