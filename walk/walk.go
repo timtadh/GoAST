@@ -351,6 +351,14 @@ func GoAST_Walk(v Visitor, node Node) {
     case *CommClause:
         if n.Comm != nil {
             GoAST_Walk(v, n.Comm)
+        } else {
+            GoAST_Walk(v, NewDummyNode(
+                    "default",
+                    n.Case,
+                    n.Colon,
+                    nil,
+                ),
+            )
         }
         walkStmtList(v, n.Body)
 
