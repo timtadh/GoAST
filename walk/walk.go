@@ -307,6 +307,15 @@ func GoAST_Walk(v Visitor, node Node) {
         }
 
     case *CaseClause:
+        if n.List == nil {
+            GoAST_Walk(v, NewDummyNode(
+                    "default",
+                    n.Case,
+                    n.Colon,
+                    nil,
+                ),
+            )
+        }
         walkExprList(v, n.List)
         walkStmtList(v, n.Body)
 

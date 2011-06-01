@@ -7,6 +7,8 @@ func main() {
             break
         case Q:
             continue Y
+        default:
+            a := 2
         }
     }
 }
