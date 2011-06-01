@@ -185,10 +185,22 @@ func GoAST_Walk(v Visitor, node Node) {
     case *SliceExpr:
         GoAST_Walk(v, n.X)
         if n.Low != nil {
-            GoAST_Walk(v, n.Low)
+            GoAST_Walk(v, NewDummyNode(
+                    "Low",
+                    n.Low.Pos(),
+                    n.Low.End(),
+                    []Node{n.Low},
+                ),
+            )
         }
         if n.High != nil {
-            GoAST_Walk(v, n.High)
+            GoAST_Walk(v, NewDummyNode(
+                    "High",
+                    n.High.Pos(),
+                    n.High.End(),
+                    []Node{n.High},
+                ),
+            )
         }
 
     case *TypeAssertExpr:
