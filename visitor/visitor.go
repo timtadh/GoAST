@@ -93,9 +93,14 @@ var visitors = map[string]func(string, ast.Node) *tree.Node {
             AddKid(tree.NewNode(fmt.Sprint(m.Tok)))
     },
 
-
     "BranchStmt": func(name string, n ast.Node) *tree.Node {
         m := n.(*ast.BranchStmt)
+        return tree.NewNode(name).
+            AddKid(tree.NewNode(fmt.Sprint(m.Tok)))
+    },
+
+    "IncDecStmt": func(name string, n ast.Node) *tree.Node {
+        m := n.(*ast.IncDecStmt)
         return tree.NewNode(name).
             AddKid(tree.NewNode(fmt.Sprint(m.Tok)))
     },
