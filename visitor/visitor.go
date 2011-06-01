@@ -83,6 +83,12 @@ var visitors = map[string]func(string, ast.Node) *tree.Node{
             AddKid(tree.NewNode(fmt.Sprint(m.Op)))
     },
 
+    "AssignStmt": func(name string, n ast.Node) *tree.Node {
+        m := n.(*ast.AssignStmt)
+        return tree.NewNode(name).
+            AddKid(tree.NewNode(fmt.Sprint(m.Tok)))
+    },
+
     "*walk.DummyNode": func(name string, n ast.Node) *tree.Node {
         m := n.(*walk.DummyNode)
         return tree.NewNode(m.Name)
