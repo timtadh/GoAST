@@ -185,21 +185,23 @@ func GoAST_Walk(v Visitor, node Node) {
     case *SliceExpr:
         GoAST_Walk(v, n.X)
         if n.Low != nil {
-            GoAST_Walk(v, NewDummyNode(
-                "Low",
-                n.Low.Pos(),
-                n.Low.End(),
-                []Node{n.Low},
-            ),
+            GoAST_Walk(v,
+                NewDummyNode(
+                    "Low",
+                    n.Low.Pos(),
+                    n.Low.End(),
+                    []Node{n.Low},
+                ),
             )
         }
         if n.High != nil {
-            GoAST_Walk(v, NewDummyNode(
-                "High",
-                n.High.Pos(),
-                n.High.End(),
-                []Node{n.High},
-            ),
+            GoAST_Walk(v,
+                NewDummyNode(
+                    "High",
+                    n.High.Pos(),
+                    n.High.End(),
+                    []Node{n.High},
+                ),
             )
         }
 
@@ -383,12 +385,13 @@ func GoAST_Walk(v Visitor, node Node) {
 
     case *CaseClause:
         if n.List == nil {
-            GoAST_Walk(v, NewDummyNode(
-                "default",
-                n.Case,
-                n.Colon,
-                nil,
-            ),
+            GoAST_Walk(v,
+                NewDummyNode(
+                    "default",
+                    n.Case,
+                    n.Colon,
+                    nil,
+                ),
             )
         }
         walkExprList(v, n.List)
@@ -396,15 +399,37 @@ func GoAST_Walk(v Visitor, node Node) {
 
     case *SwitchStmt:
         if n.Init != nil {
-            GoAST_Walk(v, n.Init)
+            GoAST_Walk(v,
+                NewDummyNode(
+                    "Init",
+                    n.Init.Pos(),
+                    n.Init.End(),
+                    []Node{n.Init},
+                ),
+            )
         }
         if n.Tag != nil {
-            GoAST_Walk(v, n.Tag)
+            GoAST_Walk(v,
+                NewDummyNode(
+                    "Tag",
+                    n.Tag.Pos(),
+                    n.Tag.End(),
+                    []Node{n.Tag},
+                ),
+            )
         }
         GoAST_Walk(v, n.Body)
 
     case *TypeSwitchStmt:
         if n.Init != nil {
+            GoAST_Walk(v,
+                NewDummyNode(
+                    "Init",
+                    n.Init.Pos(),
+                    n.Init.End(),
+                    []Node{n.Init},
+                ),
+            )
             GoAST_Walk(v, n.Init)
         }
         GoAST_Walk(v, n.Assign)

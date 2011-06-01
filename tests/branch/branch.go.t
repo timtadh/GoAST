@@ -11,4 +11,7 @@ func main() {
             a := 2
         }
     }
+    switch x := y; x {
+        case 1:
+    }
 }
