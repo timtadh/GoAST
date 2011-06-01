@@ -117,14 +117,6 @@ var finalizers = map[string]func(ast.Node, *tree.Node) {
         }()
     },
 
-    "Type": func(n ast.Node, root *tree.Node) {
-        root.Children = root.Children[0].Children
-    },
-
-    "ElemType": func(n ast.Node, root *tree.Node) {
-        root.Children = root.Children[0].Children
-    },
-
     "LabeledStmt": func(n ast.Node, root *tree.Node) {
         root.Children[0].Label = "Label"
     },
