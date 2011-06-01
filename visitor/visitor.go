@@ -9,7 +9,7 @@ import "walk"
 
 type AST_Visitor struct {
     parent *tree.Node
-    name string
+    node ast.Node
 }
 
 func New() *AST_Visitor {
@@ -31,14 +31,14 @@ func (self *AST_Visitor) addKid(node *tree.Node) *tree.Node {
 
 func (self *AST_Visitor) Visit(n ast.Node) ast.Visitor {
     if n == nil {
-        if f, ok := finalizers[self.name]; ok {
-            f(self.parent)
+        if f, ok := finalizers[self.parent.Label]; ok {
+            f(self.node, self.parent)
         }
         return nil
     }
     w := new(AST_Visitor)
     w.parent = self.addKid(self.getlabel(n))
-    w.name = w.parent.Label
+    w.node = n
     return w
 }
 
@@ -106,8 +106,8 @@ var visitors = map[string]func(string, ast.Node) *tree.Node{
 These functions rewrite the tree after construction. I try to keep these to a minimum. But
 sometimes they are necessary for a cleaner tree.
 */
-var finalizers = map[string]func(*tree.Node) {
-    "Idents": func(root *tree.Node) {
+var finalizers = map[string]func(ast.Node, *tree.Node) {
+    "Idents": func(n ast.Node, root *tree.Node) {
         root.Children = func() []*tree.Node {
             children := make([]*tree.Node, 0, len(root.Children))
             for _, c := range root.Children {
@@ -117,15 +117,22 @@ var finalizers = map[string]func(*tree.Node) {
         }()
     },
 
-    "Type": func(root *tree.Node) {
+    "Type": func(n ast.Node, root *tree.Node) {
         root.Children = root.Children[0].Children
     },
 
-    "ElemType": func(root *tree.Node) {
+    "ElemType": func(n ast.Node, root *tree.Node) {
         root.Children = root.Children[0].Children
     },
 
-    "LabeledStmt": func(root *tree.Node) {
+    "LabeledStmt": func(n ast.Node, root *tree.Node) {
         root.Children[0].Label = "Label"
+    },
+
+    "CallExpr": func(n ast.Node, root *tree.Node) {
+        m := n.(*ast.CallExpr)
+        if m.Ellipsis.IsValid() {
+            root.AddKid(tree.NewNode("HasEllipsis"))
+        }
     },
 }
