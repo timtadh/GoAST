@@ -1,5 +1,4 @@
 *.6
-goast
 main
 out.dot
 test.png

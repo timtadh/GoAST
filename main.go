@@ -3,14 +3,7 @@ package main
 import "fmt"
 import "os"
 import "flag"
-import "strings"
-import "go/parser"
-import "go/token"
-// import "go/ast"
-import "visitor"
-import "walk"
-// import "tree"
-// import "reflect"
+import "goast"
 
 const usage_msg = `goast [-ext=.go] path
 
@@ -35,8 +28,13 @@ func error(s string) {
 
 func main() {
     ext := flag.String("ext", ".go", "The extension of the files to parse.")
+    pack := flag.String("pack", "", "The package you want the AST of.")
     flag.Parse()
     args := flag.Args()
+    if *pack == "" {
+        error("A package name is required.")
+        usage(exitcodes["usage"])
+    }
     if len(args) < 1 {
         error("A path to a go file is required.")
         usage(exitcodes["usage"])
@@ -46,36 +44,11 @@ func main() {
     }
 
     path := args[0]
-    if pkgs, err := parser.ParseDir(token.NewFileSet(), path,
-        func(finfo *os.FileInfo) bool {
-            if strings.HasSuffix(finfo.Name, *ext) {
-                error("found " + finfo.Name)
-            }
-            return strings.HasSuffix(finfo.Name, *ext)
-        },
-        0); err != nil {
-        error("could not read path")
-        error(err.String())
-        usage(exitcodes["badpath"])
-    } else {
-        if len(pkgs) == 0 {
-            error("no files found.")
-            usage(exitcodes["badpath"])
-        }
-        //         if len(pkg) != 1 {
-        //             error("the directory contained more than one package, I will barf.")
-        //             os.Exit(exitcodes["barf"])
-        //         }
-        for _, node := range pkgs {
-            visitor := visitor.New()
-            walk.GoAST_Walk(
-                visitor,
-                node,
-            )
-            AST := visitor.AST()
-            fmt.Println(AST.Dotty())
-            break
-        }
+    ast, ok := goast.ParsePackage(path, *ext, *pack)
+    if !ok {
+        error("Could not parse files found in the supplied path.")
+        usage(exitcodes["usage"])
     }
+    fmt.Println(ast.Dotty())
     error("GoAST complete")
 }
