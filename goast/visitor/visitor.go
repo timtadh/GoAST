@@ -2,10 +2,10 @@ package visitor
 
 // import "os"
 import "fmt"
-import "tree"
 import "go/ast"
 import "reflect"
-import "walk"
+import "goast/walk"
+import "goast/tree"
 
 type AST_Visitor struct {
     parent *tree.Node

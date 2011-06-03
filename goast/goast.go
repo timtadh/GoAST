@@ -1,13 +1,13 @@
 package goast
 
-import "tree"
 import "os"
 import "strings"
 import "go/parser"
 import "go/token"
 // import "go/ast"
-import "visitor"
-import "walk"
+import "goast/visitor"
+import "goast/walk"
+import "goast/tree"
 
 func ParseFile(file_path string) (*tree.Node, bool) {
     file, err := parser.ParseFile(token.NewFileSet(), file_path, nil, 0)
