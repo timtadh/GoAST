@@ -44,9 +44,9 @@ func main() {
     }
 
     path := args[0]
-    ast, ok := goast.ParsePackage(path, *ext, *pack)
-    if !ok {
-        error("Could not parse files found in the supplied path.")
+    ast, err := goast.ParsePackage(path, *ext, *pack)
+    if err != nil {
+        error(err.String())
         usage(exitcodes["usage"])
     }
     fmt.Println(ast.Dotty())
