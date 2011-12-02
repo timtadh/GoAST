@@ -10,7 +10,7 @@ fmt: clean
 
 .PHONY : clean
 clean :
-	-rm -r main
+	-rm -r goast/main
 	-rm _testmain _testmain.6 _testmain.go
 	-find . -name "*.6" | xargs -I"%s" rm %s
 	-find . -name "*.a" | xargs -I"%s" rm %s
